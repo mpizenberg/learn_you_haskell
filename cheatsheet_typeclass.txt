@@ -1,0 +1,24 @@
+# Typeclasses
+
+
+## Useful examples
+
+read "5" :: Float -- explicit type annotation
+20 :: Double -- whole numbers are polymorphic constants
+
+-- a useful function to convert Int to generic Num for example
+fromIntegral :: (Num b, Integral a) => a -> b
+
+
+## Useful typeclasses
+
+Eq : support equality testing ( (==) and (/=) )
+Ord : support ordering ( (<), (>) ... )
+Enum : sequentially ordered (succ, pred)
+Bounded : upper and lower bound (minBound, maxBound)
+Num : act like numbers
+Integral : Int and Integer
+Floating : Float and Double
+
+Show : can be presented as string ( show )
+Read : opposite of Show. Can be obtained from a string ( read )

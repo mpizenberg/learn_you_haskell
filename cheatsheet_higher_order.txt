@@ -1,0 +1,122 @@
+# Higher Order Functions
+
+## Currying
+
+add10 :: Num a => a -> a
+add10 = (+) 10
+
+
+## Useful functions
+
+flip :: (a -> b -> c) -> b -> a -> c
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+map :: (a -> b) -> [a] -> [b]
+filter :: (a -> Bool) -> [a] -> [a]
+takeWhile :: (a -> Bool) -> [a] -> [a]
+
+
+## Lamdas
+
+add = \x y -> x + y
+
+
+## Folds
+
+A fold takes a binary function, a starting value (accumulator)
+and a list to fold up.
+The binary fuction  is called with the accumulator and
+an element of the list and produces a new accumulator.
+
+Read https://wiki.haskell.org/Foldr_Foldl_Foldl'
+for very useful info about folds.
+
+One important thing to note in the presence of lazy,
+or normal-order evaluation,
+is that foldr will immediately return the application of f
+to the recursive case of folding over the rest of the list.
+Thus, if f is able to produce some part of its result
+without reference to the recursive case,
+and the rest of the result is never demanded,
+then the recursion will stop.
+This allows right folds to operate on infinite lists.
+By contrast, foldl will immediately call itself with new parameters
+until it reaches the end of the list.
+This tail recursion can be efficiently compiled as a loop,
+but can't deal with infinite lists at all
+-- it will recurse forever in an infinite loop.
+Another technical point to be aware of in the case of left folds
+in a normal-order evaluation language is that
+the new initial parameter is not being evaluated
+before the recursive call is made.
+This can lead to stack overflows when one reaches the end of the list
+and tries to evaluate the resulting gigantic expression.
+For this reason, such languages often provide a stricter variant
+of left folding which forces the evaluation of the initial parameter
+before making the recursive call, in Haskell, this is the foldl'
+(note the apostrophe) function in the Data.List library.
+Combined with the speed of tail recursion,
+such folds are very efficient when lazy evaluation
+of the final result is impossible or undesirable.
+
+
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+-- if the list is empty, the result is the initial value z; else
+-- apply f to the first element and the result of folding the rest
+foldr f z []     = z
+foldr f z (x:xs) = f x (foldr f z xs)
+
+
+foldl :: (b -> a -> b) -> b -> [a] -> b
+-- if the list is empty, the result is the initial value; else
+-- we recurse immediately, making the new initial value the result
+-- of combining the old initial value with the first element.
+foldl f z []     = z
+foldl f z (x:xs) = foldl f (f z x) xs
+
+
+foldl' :: (b -> a -> b) -> b -> [a] -> b
+-- seq is a primitive system function that when applied to x and y
+-- will first reduce x then return y.
+-- The idea is that y references x so that when y is reduced x
+-- will not be a big unreduced chain anymore.
+foldl' f z []     = z
+foldl' f z (x:xs) =
+    let z' = f z x
+    in seq z' $ foldl' f z' xs
+
+
+The rules of thumb for folds are:
+
+1. Generally use foldr, especially if
+    a. the evaluation can be short-circuited
+    b. you operate on infinite list
+2. Otherwise use foldl', especially if
+    a. you implicitly want to reverse the list
+    b. the list is very big (less heap use)
+3. Never use foldl, except for rare cases.
+
+
+## Scans
+
+Scans are like folds except all intermediate results
+are stored in a list.
+
+
+## Function application with ($)
+
+The $ function has the lowest precedence.
+It is useful to avoid parenthesis ().
+
+sum (map sqrt [1..100])
+sum $ map sqrt [1..100]
+
+It can also be used on its own,
+in map fuction application for example:
+
+map ($ 3) [(4+), (10*), (^2), sqrt]
+
+
+## Function composition with (.)
+
+

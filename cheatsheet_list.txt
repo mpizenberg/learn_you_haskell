@@ -1,0 +1,71 @@
+# Lists
+
+
+## Useful syntax
+
+let l = 0:[1,2] -- [0,1,2]
+
+
+## List ranges
+
+let l = [1..20] -- try not to use with floating point numbers
+let l = [2,4..10] -- [2,4,6,8,10]
+let l = take 5 [13,26..]
+let l = ['a'..'z']
+
+
+## List comprehension
+
+let l = [x*2 | x <- [1..10]]
+let l = [x*2 | x <- [1..10], x*2 >= 12, odd x] -- multiple predicates
+let l = [x*y | x <- [1..3], y <- [5..7], odd x] -- multiple inputs
+
+
+## Useful functions
+
+head :: [a] -> a
+tail :: [a] -> [a]
+last :: [a] -> a
+init :: [a] -> [a]
+
+length :: Foldable t => t a -> Int
+null :: Foldable t => t a -> Bool
+reverse :: [a] -> [a]
+take :: Int -> [a] -> [a]
+drop :: Int -> [a] -> [a]
+
+maximum :: (Foldable t, Ord a) => t a -> a
+minimum :: (Foldable t, Ord a) => t a -> a
+sum :: (Foldable t, Num a) => t a -> a
+product :: (Foldable t, Num a) => t a -> a
+elem :: (Foldable t, Eq a) => a -> t a -> Bool
+
+-- produce infinite lists
+cycle :: [a] -> [a]
+repeat :: a -> [a]
+--
+
+replicate :: Int -> a -> [a]
+
+zip :: [a] -> [b] -> [(a,b)]
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+map :: (a -> b) -> [a] -> [b]
+filter :: (a -> Bool) -> [a] -> [a]
+takeWhile :: (a -> Bool) -> [a] -> [a]
+
+-- folds
+foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
+foldl' :: Foldable t => (b -> a -> b) -> b -> t a -> b
+foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+-- folds with non empty lists
+foldr1 :: Foldable t => (a -> a -> a) -> t a -> a
+foldl1 :: Foldable t => (a -> a -> a) -> t a -> a
+
+-- scans
+scanr :: (a -> b -> b) -> b -> [a] -> [b]
+scanl' :: (b -> a -> b) -> b -> [a] -> [b]
+scanl :: (b -> a -> b) -> b -> [a] -> [b]
+-- scans with non empty lists
+scanr1 :: (a -> b -> b) -> b -> [a] -> [b]
+scanl1 :: (b -> a -> b) -> b -> [a] -> [b]
+

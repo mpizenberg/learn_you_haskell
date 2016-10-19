@@ -1,0 +1,12 @@
+# Tuples
+
+
+## Useful syntax
+
+
+## Useful functions
+
+fst :: (a, b) -> a
+snd :: (a, b) -> b
+
+zip :: [a] -> [b] -> [(a,b)]
